@@ -21,16 +21,12 @@ library(bslib)
 
 
 theme <- bs_theme(
-    version = 4,
-    bg = "white",
-    fg = "black"
-    )
+    version = 4, bootswatch = "flatly")
 
-
-# Define UI for application that draws a histogram
+# Define UI for application:
 ui <- navbarPage(
     # application theme:
-    theme = theme, 
+    theme = theme,
     
     # Application title
     title = strong("Data Visualization"), 
@@ -38,7 +34,7 @@ ui <- navbarPage(
     
     
     tabPanel(
-        title = "Documentation",
+        title = "About",
 
         mainPanel(
             fluidRow(
@@ -167,7 +163,8 @@ ui <- navbarPage(
                                    class = "btn-success")
                 )
             ), 
-        hr()
+        hr(), 
+        "@MwavuKennedy"
     ), 
 
     # window title:
@@ -562,3 +559,4 @@ server <- function(input, output) {
 
 # Run the application 
 shinyApp(ui = ui, server = server)
+# run_with_themer(shinyApp(ui, server))
