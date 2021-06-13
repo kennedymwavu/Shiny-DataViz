@@ -4,6 +4,8 @@ title: "Features"
 
 
 <font size = "4">
+![image info](./www/actserv.jpg)
+
 
 This web application generates tables and visuals for the dataset you provide.
 Your dataset should be in the same format as the one below, ie. `Sample Dataset`. The rows MUST be in that order. Your data may not have the exact row names as the sample     dataset. All you need to do is match your rows to their equivalent. 
