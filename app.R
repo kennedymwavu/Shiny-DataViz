@@ -1,8 +1,5 @@
 library(shiny)
-library(shinythemes)
 library(bslib)
-library(datasets)
-
 
 # packages to use during data wrangling & viz:
 {
@@ -22,61 +19,23 @@ library(datasets)
 }
 
 
+
+theme <- bs_theme(
+    version = 4,
+    bg = "white",
+    fg = "black"
+    )
+
+
 # Define UI for application that draws a histogram
 ui <- navbarPage(
-    # theme = shinytheme("slate"), 
-
+    # application theme:
+    theme = theme, 
+    
     # Application title
     title = strong("Data Visualization"), 
     
-    tabPanel(
-        title = "Iris K-means",
-        # Sidebar with a slider input for number of bins
-        sidebarLayout(
-            sidebarPanel(
-                selectInput(
-                    inputId = "xvar", label = "Select x variable",
-                    choices = colnames(iris)[-5], selected = colnames(iris)[1]
-                ),
-                selectInput(
-                    inputId = "yvar", label = "Select y variable",
-                    choices = colnames(iris)[-5], selected = colnames(iris)[3]
-                ),
-                numericInput(
-                    inputId = "n", label = "Number of Clusters",
-                    value = 3
-                ),
-                width = 3
-            ),
-
-            # Show a plot:
-            mainPanel(
-                plotOutput(outputId = "kplot", width = "7in")
-            )
-        )
-    ),
-
-    tabPanel(
-        title = "Telephones",
-
-        sidebarLayout(
-            sidebarPanel(
-                selectInput(
-                    inputId = "region", label = "Region",
-                    choices = colnames(WorldPhones),
-                    selected = colnames(WorldPhones)[1]
-                ),
-
-                width = 3
-            ),
-
-            mainPanel(
-                plotOutput(
-                    outputId = "phones", width = "7in"
-                )
-            )
-        )
-    ),
+    
     
     tabPanel(
         title = "Documentation",
@@ -114,12 +73,12 @@ ui <- navbarPage(
         ),
 
     tabPanel(
-        title = "ActServ",
+        title = "Data",
 
         sidebarLayout(
             sidebarPanel(
                 # Input: Select a file:
-                fileInput(inputId = "file1", label = "Choose an Excel File",
+                fileInput(inputId = "file1", label = "Choose an Excel File:",
                           multiple = TRUE,
                           accept = c(".xlsx")),
 
@@ -127,40 +86,22 @@ ui <- navbarPage(
                 tags$hr(),
 
                 # Input: Select type of file:
-                radioButtons(inputId = "type", label = "File Type",
+                radioButtons(inputId = "type", label = "File Type:",
                              choices = c(".xlsx" = ".xlsx"),
                              selected = ".xlsx"),
 
-                # Horizontal line:
-                tags$hr(),
                 # Input: Checkbox if file has header:
-                checkboxInput(inputId = "header", label = "Header", value = TRUE),
+                checkboxInput(inputId = "header", label = "Header", 
+                              value = TRUE),
+                
+                hr(), 
+                p(strong("Don't have your own dataset?")), 
+                checkboxInput(inputId = "use_sample", 
+                              label = "Use sample dataset"), 
 
                 # Horizontal line:
                 tags$hr(),
 
-                # Input: Select number of rows to display:
-                radioButtons(inputId = "disp", label = "Display",
-                             choices = c(Head = "head", All = "all"),
-                             selected = "all"),
-
-                span(textOutput("message"), style = "color:red"),
-
-                tags$hr(),
-
-                selectInput(inputId = "summary_table",
-                            label = "Which summary table (or it's equivalent) would you like
-                      to view?",
-                      choices = c(
-                          "Gross Direct Premium",
-                          "Incurred Claims vs Net Earned Premium", "Loss Ratios",
-                          "Combined Ratios", "Commission vs Expense Ratio",
-                          "Underwriting Profit Ratio"),
-                      selected = "Gross Direct Premium"
-                ),
-                "Choosing this determines how the tables and plots will be formatted",
-
-                # Horizontal line:
                 tags$hr(),
 
                 width = 3
@@ -174,41 +115,60 @@ ui <- navbarPage(
                 tags$hr(),
                 tags$hr(),
 
-                fluidRow(
-                    column(
-                        width = 4,
-                        strong("Summary Table"),
-                        tableOutput("summ_table"),
-                        # Download buttons for csv and png:
-                        downloadButton(outputId = "downloadData", 
-                                       label = "Summary Table .csv", 
-                                       class = "btn-success")
-                    ),
-
-                    # Horizontal line:
-                    # tags$hr(),
-
-                    column(
-                        width = 5,
-                        strong("Plot"),
-
-                        plotOutput("summ_plot", width = "7in", height = "6in"),
-
-                        downloadButton(outputId = "downloadImage", 
-                                       label = "Summary Plot .png", 
-                                       class = "btn-success")
-                    )
-                ),
-
-
-                # Horizontal line:
-                tags$hr(),
-                tags$hr(),
-
                 width = 9
             )
         )
-    ),
+    ),  
+    
+    tabPanel(
+        title = "Summary", 
+        
+            fluidRow(
+                column(
+                    selectInput(inputId = "summary_table",
+                                label = "Which summary table (or it's equivalent) would you like to view?",
+                                choices = c(
+                                    "Gross Direct Premium",
+                                    "Incurred Claims vs Net Earned Premium", 
+                                    "Loss Ratios",
+                                    "Combined Ratios", "Commission vs Expense Ratio",
+                                    "Underwriting Profit Ratio"),
+                                selected = "Gross Direct Premium"
+                    ), 
+                    width = 12, 
+                    offset = 1
+                )
+            ),
+            
+            # Horizontal line:
+            tags$hr(), 
+            
+            fluidRow(
+                column(
+                    width = 4,
+                    strong("Summary Table"),
+                    tableOutput("summ_table"),
+                    # Download buttons for csv and png:
+                    downloadButton(outputId = "downloadData", 
+                                   label = "Summary Table .csv", 
+                                   class = "btn-success"), 
+                    
+                    offset = 1
+                ), 
+                
+                column(
+                    width = 5,
+                    strong("Plot"),
+                    
+                    plotOutput("summ_plot", width = "7in", height = "6in"),
+                    
+                    downloadButton(outputId = "downloadImage", 
+                                   label = "Summary Plot .png", 
+                                   class = "btn-success")
+                )
+            ), 
+        hr()
+    ), 
 
     # window title:
     windowTitle = "Data Visualization"
@@ -216,85 +176,20 @@ ui <- navbarPage(
 
 # Define server logic required:
 server <- function(input, output) {
-    # df with chosen x and y vars:
-    df <- reactive({
-        iris[ , c(input$xvar, input$yvar)]
-    })
-
-    # kmeans clustering:
-    km <- reactive(kmeans(x = df(), centers = input$n))
-
-    # The centers:
-    cents <- reactive({
-        km()$centers %>% as_tibble()
-    })
-
-
-    # Then the plot:
-    output$kplot <- renderPlot({
-        ggplot() +
-            geom_point(data = df(),
-                       mapping = aes(x = df()[ , 1], y = df()[ , 2],
-                                     color = km()$cluster %>% factor()),
-                       size = 3, shape = 20
-                       ) +
-            geom_point(mapping = aes(x = cents()[[1]], y = cents()[[2]]),
-                       shape = 4, size = 8) +
-            xlab(input$xvar) + ylab(input$yvar) +
-            ggtitle(label = paste(input$xvar, "vs", input$yvar)) +
-            labs(color = "Clusters") +
-            theme(
-                plot.title = element_text(face = "bold", hjust = 0.5),
-                panel.grid = element_blank(),
-                panel.background = element_blank(),
-                axis.ticks = element_blank(),
-                axis.line = element_line()
-            )
-    })
-
-
-    phoneOutput <- reactive({
-        WorldPhones %>% as_tibble() %>%
-            ggplot(
-                mapping = aes(x = rownames(WorldPhones), y = WorldPhones[ , input$region])
-            ) +
-            geom_col(fill = rainbow(n = length(rownames(WorldPhones)), alpha = 0.7),
-                     width = 0.7) +
-            ylab("Number of telephones(In 1000's)") + xlab("") + ggtitle(input$region) +
-            coord_flip() +
-            theme(
-                aspect.ratio = 0.65,
-                plot.title = element_text(hjust = 0.5, face = "bold"),
-                panel.background = element_blank(),
-                panel.grid = element_blank(),
-                axis.line = element_line(),
-                axis.ticks.y = element_blank()
-            )
-    })
-
-    output$phones <- renderPlot({
-        phoneOutput()
-    })
-    #
-
     # ActServ:
-
     output$sample_dataset <- renderTable({
         all_data
     })
 
-    output$message <- renderText({"Note: Set display to 'All' before proceeding to the
-    Summary and Visualizations section."})
-
     # Read in user's selected file:
     dataInput <- reactive({
-        req(input$file1)
-
-        whole <- read_excel(input$file1$datapath, sheet = 1, col_names = input$header)
-
-        if (input$disp == "head") {
-            return(head(whole))
+        if (input$use_sample) {
+            return(all_data)
         }else{
+            req(input$file1)
+            
+            whole <- read_excel(input$file1$datapath, sheet = 1, col_names = input$header)
+            
             return(whole)
         }
 
@@ -666,4 +561,4 @@ server <- function(input, output) {
 }
 
 # Run the application 
-shinyApp(ui = ui, server = server, options = list("display.mode" = "showcase"))
+shinyApp(ui = ui, server = server)
