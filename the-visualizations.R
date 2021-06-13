@@ -3,11 +3,12 @@ library(tidyverse)
 library(reshape2)
 library(magrittr)
 
-# Read in the data:
+# Read in the sample data:
 all_data <- df <-  read_xlsx(
   path = "data for assignment.xlsx", 
   sheet = 1, col_names = TRUE
-  )
+)
+
 # take a peak at the data:
 glimpse(df)
 head(df)

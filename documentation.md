@@ -1,17 +1,7 @@
 ---
 title: "Features"
-output:
-  html_document:
-    theme: flatly
-    toc: no
 ---
-<style>
-.main-container {
-    max-width: 940px;
-    margin-left: auto;
-    margin-right: auto;
-}
-</style>
+
 
 <font size = "4">
 
