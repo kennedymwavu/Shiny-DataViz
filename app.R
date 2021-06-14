@@ -289,7 +289,7 @@ server <- function(input, output) {
             select(`Underwriting Profit(Loss)`, `Net Earned Premium Income`) %>% {. / 1e6} %>%
             mutate(
                 `Profit Ratio` = `Underwriting Profit(Loss)` / `Net Earned Premium Income`,
-                Year = df_f$Year
+                Year = colnames(all_data)[-1]
             ) %>% relocate(Year) %>% select(-`Net Earned Premium Income`) %>%
             mutate(
                 `Underwriting Profit(Loss)` = `Underwriting Profit(Loss)` %>% round(digits = 1),
@@ -468,7 +468,7 @@ server <- function(input, output) {
             select(`Underwriting Profit(Loss)`, `Net Earned Premium Income`) %>% {. / 1e6} %>%
             mutate(
                 `Profit Ratio` = `Underwriting Profit(Loss)` / `Net Earned Premium Income`,
-                Year = df_f$Year
+                Year = colnames(all_data)[-1]
             ) %>% relocate(Year) %>% select(-`Net Earned Premium Income`) %>%
             ggplot(mapping = aes(x = Year)) +
             geom_col(mapping = aes(y = `Underwriting Profit(Loss)`, fill = "#ff7c7c"),
