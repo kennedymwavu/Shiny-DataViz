@@ -1,1 +1,1 @@
-*.R linguist-language=R
+src/header_lib/* linguist-vendored
